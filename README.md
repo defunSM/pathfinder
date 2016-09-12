@@ -14,8 +14,9 @@ REPL - run `(require 'pathfinder.core)`.
 
 Copyright © 2014 FIXME
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+
+DESCRIPTION
 =======
 A pathfinding algorithm using clojure and quil for visualization.
 
