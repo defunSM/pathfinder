@@ -1,4 +1,5 @@
 # pathfinder
+<<<<<<< HEAD
 
 A Quil sketch designed to ... well, that part is up to you.
 
@@ -16,3 +17,6 @@ Copyright © 2014 FIXME
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
+=======
+A pathfinding algorithm using clojure and quil for visualization.
+>>>>>>> c999eeb1c85832af3d99a9c44190bb4c0144dfe0
