@@ -4,11 +4,10 @@ A Quil sketch to visualize pathfinding.
 
 ## Usage
 
-LightTable - open `core.clj` and press `Ctrl+Shift+Enter` to evaluate the file.
+Currently working on implementing procedurally generated maps.
+In process of working out more sophisticated ways of optimizing the creation of boxes.
 
-Emacs - run cider, open `core.clj` and press `C-c C-k` to evaluate the file.
 
-REPL - run `(require 'pathfinder.core)`.
 
 ## License
 
@@ -19,4 +18,3 @@ Distributed under the Eclipse Public License either version 1.0 or (at your opti
 DESCRIPTION
 =======
 A pathfinding algorithm using clojure and quil for visualization.
-

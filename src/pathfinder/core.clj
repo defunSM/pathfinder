@@ -2,9 +2,13 @@
   (:require [quil.core :as q]
             [quil.middleware :as m]))
 
-(def typing (atom ""))
 (def block-id (atom 0))
 (def boxes (atom []))
+(def size (atom 10))
+
+(declare start-path)
+
+(start-path)
 
 (defn create-box [click-x click-y block-id]
   {:x click-x
@@ -12,23 +16,33 @@
    :mode block-id})
 
 (defn make-box []
-  (swap! boxes assoc-in [(count @boxes)] {:x (q/mouse-x) :y (q/mouse-y) :mode @block-id}))
+  (let [mode (int @block-id)
+        c1 (if (= 1 mode)
+             (int 100)
+             (int 150))
+        c2 (if (= 1 mode)
+             (int 100)
+             (int 230))
+        c3 (if (= 1 mode)
+             (int 210)
+             (int 150))]
+    (println c1 " " c2 " " c3)
+    (swap! boxes assoc-in [(count @boxes)] {:x (q/mouse-x) :y (q/mouse-y) :c1 c1 :c2 c2 :c3 c3})))
 
 (defn box [x y color1 color2 color3]
-  (q/rect x y 50 50)
+  (q/rect x y @size @size)
   (q/stroke 5)
   (q/stroke-weight 2)
   (q/color color1 color2 color3))
-
 
 (defn setup []
   (q/smooth 10)
   (q/background 220)
   (q/color 240))
 
-(defn mk-box [{:keys [x y mode]}]
-  (let [color1 (= mode 1)]
-    (q/rect (* (Math/floor (/ x 50)) 50) (* (Math/floor (/ y 50)) 50) 50 50 0)))
+(defn mk-box [{:keys [x y c1 c2 c3]}]
+  (q/fill c1 c2 c3)
+  (q/rect (* (Math/floor (/ x @size)) @size) (* (Math/floor (/ y @size)) @size) @size @size))
 
 (defn draw []
   (q/background 220)
@@ -37,14 +51,14 @@
       (mk-box c)))
 
   (if (= 3 @block-id)
-    (let [x (* (Math/floor (/ (q/mouse-x) 50)) 50)
-          y (* (Math/floor (/ (q/mouse-y) 50)) 50)]
+    (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
+          y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
       (q/fill 150 230 150)
       (box x y 200 200 0)))
 
   (if (= 1 @block-id)
-    (let [x (* (Math/floor (/ (q/mouse-x) 50)) 50)
-          y (* (Math/floor (/ (q/mouse-y) 50)) 50)]
+    (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
+          y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
       (q/fill 100 100 210)
       (box x y 200 200 0)))
 
@@ -52,7 +66,9 @@
     (do (if (= (.toString (q/raw-key)) "s")
           (reset! block-id 1))
         (if (= (.toString (q/raw-key)) "e")
-          (reset! block-id 3))))
+          (reset! block-id 3))
+        (if (= (.toString (q/raw-key)) "c")
+          (reset! boxes []))))
 
   (if (q/mouse-pressed?)
     (make-box))
@@ -60,12 +76,13 @@
   (q/fill 255 0 0)
   (q/text (.toString (q/seconds)) (- (q/width) 30) 20))
 
-(q/defsketch pathfinder
-  :title "SMchat"
-  :size [500 500]
-  :setup setup
-  :draw draw
-  :mouse-pressed make-box)
+(defn start-path []
+  (q/defsketch pathfinder
+    :title "SMchat"
+    :size [500 500]
+    :setup setup
+    :draw draw
+    :mouse-pressed make-box))
 
   ;; (loop [x 0
   ;;        y 0
