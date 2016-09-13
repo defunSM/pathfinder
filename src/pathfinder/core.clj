@@ -71,16 +71,22 @@
       (box x y 200 200 0)))
 
   (if (q/key-pressed?)
-    (do (if (= (.toString (q/raw-key)) "s")
-          (reset! block-id 1))
-        (if (= (.toString (q/raw-key)) "e")
-          (reset! block-id 3))
-        (if (= (.toString (q/raw-key)) "c")
-          (reset! boxes []))
-        (if (= (.toString (q/raw-key)) "p")
-          (pause))
-        (if (= (.toString (q/raw-key)) "z")
-          ())))
+    (let [key (.toString (q/raw-key))]
+      (do (if (= key "s")
+            (reset! block-id 1))
+          (if (= key "e")
+            (reset! block-id 3))
+          (if (= key "c")
+            (reset! boxes []))
+          (if (= key "p")
+            (pause))
+          (if (= key "z")
+            ())
+          (if (= key "q")
+            (q/exit))
+          (if (= key "r")
+            (do (q/exit)
+                (start-path))))))
 
   (if (q/mouse-pressed?)
     (make-box))
@@ -97,8 +103,6 @@
     :mouse-pressed make-box))
 
 (start-path)
-
-
 
   ;; (loop [x 0
   ;;        y 0
