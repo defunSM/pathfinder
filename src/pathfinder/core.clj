@@ -8,7 +8,9 @@
 
 (declare start-path)
 
-(start-path)
+(defn boundaries [])
+
+(defn pause [])
 
 (defn create-box [click-x click-y block-id]
   {:x click-x
@@ -25,9 +27,15 @@
              (int 230))
         c3 (if (= 1 mode)
              (int 210)
-             (int 150))]
-    (println c1 " " c2 " " c3)
-    (swap! boxes assoc-in [(count @boxes)] {:x (q/mouse-x) :y (q/mouse-y) :c1 c1 :c2 c2 :c3 c3})))
+             (int 150))
+        new-box {:x (* (Math/floor (/ (q/mouse-x) @size)) @size) :y (* (Math/floor (/ (q/mouse-y) @size)) @size) :c1 c1 :c2 c2 :c3 c3}]
+    (if (= (count @boxes) 0)
+      (swap! boxes assoc-in [(count @boxes)] new-box)
+      (let [valid (if (= new-box (nth @boxes (- (count @boxes) 1)))
+                    false
+                    true)]
+        (if (= valid true)
+          (swap! boxes assoc-in [(count @boxes)] new-box))))))
 
 (defn box [x y color1 color2 color3]
   (q/rect x y @size @size)
@@ -68,7 +76,11 @@
         (if (= (.toString (q/raw-key)) "e")
           (reset! block-id 3))
         (if (= (.toString (q/raw-key)) "c")
-          (reset! boxes []))))
+          (reset! boxes []))
+        (if (= (.toString (q/raw-key)) "p")
+          (pause))
+        (if (= (.toString (q/raw-key)) "z")
+          ())))
 
   (if (q/mouse-pressed?)
     (make-box))
@@ -83,6 +95,10 @@
     :setup setup
     :draw draw
     :mouse-pressed make-box))
+
+(start-path)
+
+
 
   ;; (loop [x 0
   ;;        y 0
