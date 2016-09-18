@@ -4,10 +4,16 @@ A Quil sketch to visualize pathfinding.
 
 ## Usage
 
+![pathfinding](http://imgur.com/VKdcQxll.png)
+
 Currently working on implementing procedurally generated maps.
 In process of working out more sophisticated ways of optimizing the creation of boxes.
 
+## Features
 
+- Can be used as a drawing pad.
+- Creates boxes of different colors.
+- Can undo drawings.
 
 ## License
 
