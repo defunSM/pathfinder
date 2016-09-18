@@ -97,8 +97,8 @@
 
 
 
-  ;; (if (q/mouse-pressed?)
-  ;;   (make-box))
+  (if (q/mouse-pressed?)
+    (make-box))
 
   (q/fill 255 0 0)
   (q/text (.toString (q/seconds)) (- (q/width) 30) 20)
