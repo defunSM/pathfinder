@@ -4,9 +4,8 @@
 
 (def block-id (atom 0))
 (def boxes (atom []))
+(def player (atom {:x 100 :y 100 :c1 150 :c2 150 :c3 150}))
 (def size (atom 10))
-
-(declare start-path)
 
 (defn boundaries [])
 
@@ -52,57 +51,83 @@
   (q/fill c1 c2 c3)
   (q/rect (* (Math/floor (/ x @size)) @size) (* (Math/floor (/ y @size)) @size) @size @size))
 
+(defn mk-player [{:keys [x y c1 c2 c3]}]
+  (q/fill c1 c2 c3)
+  (q/rect x y @size @size))
+
 (defn draw []
   (q/background 220)
   (let [boxes* @boxes]
     (doseq [c boxes*]
       (mk-box c)))
 
-  (if (= 3 @block-id)
-    (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
-          y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
-      (q/fill 150 230 150)
-      (box x y 200 200 0)))
-
-  (if (= 1 @block-id)
-    (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
-          y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
-      (q/fill 100 100 210)
-      (box x y 200 200 0)))
+  (mk-player @player)
 
   (if (q/key-pressed?)
     (let [key (.toString (q/raw-key))]
-      (do (if (= key "s")
-            (reset! block-id 1))
-          (if (= key "e")
-            (reset! block-id 3))
-          (if (= key "c")
-            (reset! boxes []))
-          (if (= key "p")
-            (pause))
-          (if (= key "z")
-            ())
-          (if (= key "q")
-            (q/exit))
-          (if (= key "r")
-            (do (q/exit)
-                (start-path))))))
+      (if (= key "w")
+        (if (< 0 (:y @player))
+          (swap! player update-in [:y] dec)))
+      (if (= key "s")
+        (if (> (- (q/height) @size) (:y @player))
+          (swap! player update-in [:y] inc)))
+      (if (= key "a")
+        (if (< 0 (:x @player))
+          (swap! player update-in [:x] dec)))
+      (if (= key "d")
+        (if (> (- (q/width) @size) (:x @player))
+          (swap! player update-in [:x] inc)))
+      (if (= key "t")
+        (reset! block-id 1))
+      (if (= key "y")
+        (reset! block-id 3))
+      (if (= key "c")
+        (reset! boxes []))
+      (if (= key "p")
+        (pause))
+      (if (= key "z")
+        (let [num (count @boxes)]
+          (if (> num 0)
+            (reset! boxes (pop @boxes))))) ;; could be written to be optimized.
+      (if (= key "q")
+        (q/exit))
+      (if (= key "r")
+        (do (q/exit)
+            (start-path)))))
 
-  (if (q/mouse-pressed?)
-    (make-box))
+
+
+  ;; (if (q/mouse-pressed?)
+  ;;   (make-box))
 
   (q/fill 255 0 0)
-  (q/text (.toString (q/seconds)) (- (q/width) 30) 20))
+  (q/text (.toString (q/seconds)) (- (q/width) 30) 20)
+
+  (println (q/mouse-x) "-" (q/mouse-y)))
 
 (defn start-path []
   (q/defsketch pathfinder
-    :title "SMchat"
+    :title "Pathfinder"
     :size [500 500]
     :setup setup
     :draw draw
     :mouse-pressed make-box))
 
 (start-path)
+
+
+  ;; (if (= 3 @block-id)
+  ;;   (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
+  ;;         y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
+  ;;     (q/fill 150 230 150)
+  ;;     (box x y 200 200 0)))
+
+  ;; (if (= 1 @block-id)
+  ;;   (let [x (* (Math/floor (/ (q/mouse-x) @size)) @size)
+  ;;         y (* (Math/floor (/ (q/mouse-y) @size)) @size)]
+  ;;     (q/fill 100 100 210)
+  ;;     (box x y 200 200 0)))
+
 
   ;; (loop [x 0
   ;;        y 0
