@@ -118,7 +118,7 @@
     (make-box))
 
   (q/fill 255 0 0)
-  (q/text (.toString (:hp @player-stats)) (- (q/width) 30) 20)
+  ;; (q/text (.toString (:hp @player-stats)) (- (q/width) 30) 20)
 
   (println (q/mouse-x) "-" (q/mouse-y)))
 
@@ -172,7 +172,7 @@
   ;;                  color3 (if (= 3 (:mode boxes*)) (int 150))]
   ;;              color3))))
 
-;; make this work
+  ;; make this work
 
   ;; (if (= 0 (count @boxes))
   ;;   (println "none")
