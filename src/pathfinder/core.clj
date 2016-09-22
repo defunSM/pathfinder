@@ -5,7 +5,9 @@
 (def block-id (atom 0))
 (def boxes (atom []))
 (def player (atom {:x 100 :y 100 :c1 150 :c2 150 :c3 150}))
+;; (def player-stats (atom {:hp 100}))
 (def size (atom 10))
+
 
 (defn boundaries [])
 
@@ -55,6 +57,17 @@
   (q/fill c1 c2 c3)
   (q/rect x y @size @size))
 
+(defn validspace [{:keys [x y]}]
+  (if (= x (:x @player))
+    (if (= y (:y @player))
+      (println "ALERT"))))
+
+(defn check-valid-move? []
+  (let [player-x (:x @player)
+        player-y (:y @player)]
+    (doseq [c @boxes]
+      (validspace c))))
+
 (defn draw []
   (q/background 220)
   (let [boxes* @boxes]
@@ -63,20 +76,26 @@
 
   (mk-player @player)
 
+;;  (check-valid-move?)
+
   (if (q/key-pressed?)
     (let [key (.toString (q/raw-key))]
       (if (= key "w")
         (if (< 0 (:y @player))
-          (swap! player update-in [:y] dec)))
+          (do (swap! player update-in [:y] - 5)
+              (check-valid-move?))))
       (if (= key "s")
         (if (> (- (q/height) @size) (:y @player))
-          (swap! player update-in [:y] inc)))
+          (do (swap! player update-in [:y] + 5)
+              (check-valid-move?))))
       (if (= key "a")
         (if (< 0 (:x @player))
-          (swap! player update-in [:x] dec)))
+          (do (swap! player update-in [:x] - 5)
+              (check-valid-move?))))
       (if (= key "d")
         (if (> (- (q/width) @size) (:x @player))
-          (swap! player update-in [:x] inc)))
+          (do (swap! player update-in [:x] + 5)
+              (check-valid-move?))))
       (if (= key "t")
         (reset! block-id 1))
       (if (= key "y")
@@ -95,13 +114,11 @@
         (do (q/exit)
             (start-path)))))
 
-
-
   (if (q/mouse-pressed?)
     (make-box))
 
   (q/fill 255 0 0)
-  (q/text (.toString (q/seconds)) (- (q/width) 30) 20)
+  (q/text (.toString (:hp @player-stats)) (- (q/width) 30) 20)
 
   (println (q/mouse-x) "-" (q/mouse-y)))
 
